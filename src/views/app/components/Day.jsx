@@ -1,6 +1,7 @@
 import React from "react";
-import { Grid, Paper, Typography } from "@material-ui/core";
+import { Grid, Paper, Tooltip, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
   dayGrid: {
@@ -16,15 +17,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Day = ({ number, currentMonth }) => {
+const Day = ({ number, currentMonth, reminders = [] }) => {
   const classes = useStyles();
+  const isToday = moment().date() === number;
+
   return (
     <Grid item className={classes.dayGrid}>
       <Paper
         elevation={3}
+        style={isToday ? { backgroundColor: "#DFCA74" } : {}}
         className={currentMonth ? classes.currentMonth : classes.otherMonth}
       >
-        <Typography variant="h7">{number}</Typography>
+        <Typography variant="h6">{number}</Typography>
+        <div style={{ overflowY: "scroll", height: "60px" }}>
+          {reminders
+            .sort((a, b) => (moment(a.datetime).isBefore(b.datetime) ? -1 : 1))
+            .map(({ description, city, datetime, color }) => (
+              <Tooltip
+                key={Math.random() * 10}
+                title={`${description} on ${city} at ${datetime.format(
+                  "dddd, MMMM Do YYYY, h:mm a"
+                )}`}
+              >
+                <div style={color ? { backgroundColor: color } : {}}>
+                  {description}
+                </div>
+              </Tooltip>
+            ))}
+        </div>
       </Paper>
     </Grid>
   );

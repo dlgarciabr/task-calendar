@@ -26,8 +26,7 @@ const Month = ({ monthIndex, year }) => {
   const classes = useStyles();
 
   const weekArray = moment.weekdays();
-  const today = moment();
-  //const todayNumber = currentDay.getDate();
+
   const mMonth = moment([year, monthIndex]);
   const mYear = moment([year, 11, 31]);
   const monthName = mMonth.format("MMMM");
@@ -41,6 +40,39 @@ const Month = ({ monthIndex, year }) => {
 
   const dayComponents = [];
 
+  const reminders = [
+    {
+      description: "note",
+      datetime: moment().hour(7),
+      color: "#DF74DA",
+      city: "Rio",
+    },
+    {
+      description: "note aaa",
+      datetime: moment().hour(1),
+      color: "#74DF8B",
+      city: "SP",
+    },
+    {
+      description: "note aaa",
+      datetime: moment().hour(5),
+      color: "#74DF8B",
+      city: "SP",
+    },
+    {
+      description: "note bbb",
+      datetime: moment().hour(11),
+      color: "#714D55",
+      city: "MG",
+    },
+    {
+      description: "note dddd",
+      datetime: moment().hour(10),
+      color: "#DF74DA",
+      city: "MG",
+    },
+  ];
+
   for (var i = 1; i <= mYear.dayOfYear(); i++) {
     const mDay = moment().dayOfYear(i);
 
@@ -49,11 +81,21 @@ const Month = ({ monthIndex, year }) => {
       mMonth.month() !== mDay.month()
     ) {
       dayComponents.push(
-        <Day number={mDay.date()} events={[]} key={i} currentMonth={false} />
+        <Day
+          number={mDay.date()}
+          reminders={reminders}
+          key={i}
+          currentMonth={false}
+        />
       );
     } else if (mMonth.month() === mDay.month()) {
       dayComponents.push(
-        <Day number={mDay.date()} events={[]} key={i} currentMonth={true} />
+        <Day
+          number={mDay.date()}
+          reminders={reminders}
+          key={i}
+          currentMonth={true}
+        />
       );
     }
   }
@@ -73,7 +115,7 @@ const Month = ({ monthIndex, year }) => {
             style={{ textAlign: "center" }}
           >
             <Paper elevation={3} className={classes.weekday}>
-              <Typography variant="h7" style={{ color: "#fff" }}>
+              <Typography variant="subtitle1" style={{ color: "#fff" }}>
                 {weekday}
               </Typography>
             </Paper>
