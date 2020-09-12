@@ -2,6 +2,7 @@ import React from "react";
 import { Grid, Paper, Typography } from "@material-ui/core";
 import moment from "moment";
 import { makeStyles } from "@material-ui/core/styles";
+import { useSelector, useDispatch } from "react-redux";
 
 import Day from "./Day";
 
@@ -14,7 +15,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const compareReminderMoment = (m1, m2) =>
+  m1.date() === m2.date() && m1.months() === m2.months();
+
 const Month = ({ monthIndex, year }) => {
+  const { reminders } = useSelector((state) => state.app);
+
   moment.updateLocale("en", {
     week: {
       dow: 0,
@@ -40,39 +46,6 @@ const Month = ({ monthIndex, year }) => {
 
   const dayComponents = [];
 
-  const reminders = [
-    {
-      description: "note",
-      datetime: moment().hour(7),
-      color: "#DF74DA",
-      city: "Rio",
-    },
-    {
-      description: "note aaa",
-      datetime: moment().hour(1),
-      color: "#74DF8B",
-      city: "SP",
-    },
-    {
-      description: "note aaa",
-      datetime: moment().hour(5),
-      color: "#74DF8B",
-      city: "SP",
-    },
-    {
-      description: "note bbb",
-      datetime: moment().hour(11),
-      color: "#714D55",
-      city: "MG",
-    },
-    {
-      description: "note dddd",
-      datetime: moment().hour(10),
-      color: "#DF74DA",
-      city: "MG",
-    },
-  ];
-
   for (var i = 1; i <= mYear.dayOfYear(); i++) {
     const mDay = moment().dayOfYear(i);
 
@@ -80,19 +53,25 @@ const Month = ({ monthIndex, year }) => {
       (mDay.week() === firstWeekOfMonth || mDay.week() === lastWeekOfMonth) &&
       mMonth.month() !== mDay.month()
     ) {
+      const dayReminders = reminders.filter((r) =>
+        compareReminderMoment(r.datetime, mDay)
+      );
       dayComponents.push(
         <Day
           number={mDay.date()}
-          reminders={reminders}
+          reminders={dayReminders}
           key={i}
           currentMonth={false}
         />
       );
     } else if (mMonth.month() === mDay.month()) {
+      const dayReminders = reminders.filter((r) =>
+        compareReminderMoment(r.datetime, mDay)
+      );
       dayComponents.push(
         <Day
           number={mDay.date()}
-          reminders={reminders}
+          reminders={dayReminders}
           key={i}
           currentMonth={true}
         />

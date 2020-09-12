@@ -29,7 +29,7 @@ const Day = ({ number, currentMonth, reminders = [] }) => {
         className={currentMonth ? classes.currentMonth : classes.otherMonth}
       >
         <Typography variant="h6">{number}</Typography>
-        <div style={{ overflowY: "scroll", height: "60px" }}>
+        <div style={{ overflowY: "auto", height: "60px" }}>
           {reminders
             .sort((a, b) => (moment(a.datetime).isBefore(b.datetime) ? -1 : 1))
             .map(({ description, city, datetime, color }) => (

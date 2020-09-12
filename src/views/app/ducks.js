@@ -1,4 +1,5 @@
 // views/app/ducks.js
+import moment from "moment";
 
 import messages from "../../utils/messages";
 
@@ -12,6 +13,38 @@ export const types = {
 // initial state
 export const initialState = {
   notifications: [],
+  reminders: [
+    {
+      description: "note",
+      datetime: moment().hour(7),
+      color: "#DF74DA",
+      city: "Rio",
+    },
+    {
+      description: "note aaa",
+      datetime: moment().hour(1),
+      color: "#74DF8B",
+      city: "SP",
+    },
+    {
+      description: "note aaa",
+      datetime: moment().dates(1).hour(5),
+      color: "#74DF8B",
+      city: "SP",
+    },
+    {
+      description: "note bbb",
+      datetime: moment().hour(11),
+      color: "#714D55",
+      city: "MG",
+    },
+    {
+      description: "note dddd",
+      datetime: moment().hour(10),
+      color: "#DF74DA",
+      city: "MG",
+    },
+  ],
 };
 
 // reducers
