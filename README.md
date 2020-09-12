@@ -6,8 +6,6 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 
 Install all libraries in order to run the application
 
-This project also depends on a backend project available at []()
-
 ## Available Scripts
 
 In the project directory, you can run:
