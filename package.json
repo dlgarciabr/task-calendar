@@ -1,0 +1,50 @@
+{
+  "name": "evaluation-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "10.4.7",
+    "@testing-library/user-event": "^7.2.1",
+    "clsx": "^1.1.1",
+    "jest-environment-jsdom-sixteen": "^1.0.3",
+    "lodash": "^4.17.20",
+    "notistack": "^0.9.17",
+    "react": "^16.13.1",
+    "react-confirm-alert": "^2.6.1",
+    "react-dom": "^16.13.1",
+    "react-redux": "^7.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.1",
+    "react-test-renderer": "^16.13.1",
+    "redux": "^4.0.5",
+    "redux-multi": "^0.1.12",
+    "redux-promise": "^0.6.0",
+    "redux-thunk": "^2.3.0"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --watchAll --silent --env=jest-environment-jsdom-sixteen --verbose true",
+    "test-verbose": "react-scripts test --watchAll --env=jest-environment-jsdom-sixteen --verbose true",
+    "test-coverage": "react-scripts test  --watchAll --collectCoverage --silent --env=jest-environment-jsdom-sixteen",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
