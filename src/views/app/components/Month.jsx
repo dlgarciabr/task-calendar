@@ -4,9 +4,11 @@ import moment from "moment";
 import { makeStyles } from "@material-ui/core/styles";
 
 import Day from "./Day";
-import { camelCase } from "lodash";
 
 const useStyles = makeStyles((theme) => ({
+  weekday: {
+    backgroundColor: "#3f51b5",
+  },
   day: {
     width: "14.28%",
   },
@@ -28,7 +30,6 @@ const Month = ({ monthIndex, year }) => {
   //const todayNumber = currentDay.getDate();
   const mMonth = moment([year, monthIndex]);
   const mYear = moment([year, 11, 31]);
-  const monthDaysQty = mMonth.daysInMonth();
   const monthName = mMonth.format("MMMM");
 
   const firstWeekOfMonth = moment(mMonth)
@@ -65,12 +66,17 @@ const Month = ({ monthIndex, year }) => {
         </Grid>
         {weekArray.map((weekday) => (
           <Grid
+            color="seconday"
             item
             key={Math.random() * 10}
             className={classes.day}
             style={{ textAlign: "center" }}
           >
-            <Paper elevation={3}>{weekday}</Paper>
+            <Paper elevation={3} className={classes.weekday}>
+              <Typography variant="h7" style={{ color: "#fff" }}>
+                {weekday}
+              </Typography>
+            </Paper>
           </Grid>
         ))}
         <Grid item container spacing={1}>
