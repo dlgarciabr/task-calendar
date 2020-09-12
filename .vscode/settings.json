@@ -1,0 +1,6 @@
+{
+  "javascript.validate.enable": false,
+  "javascript.format.enable": true,
+  "editor.formatOnSave": true,
+  "eslint.trace.server": "messages"
+}
