@@ -11,16 +11,68 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
 import { CompactPicker } from "react-color";
 import { Typography } from "@material-ui/core";
+import moment from "moment";
 
 const ReminderDialog = (props) => {
-  const { onClose, onSave, reminder, open } = props;
-  const [selectedColor, setSelectedColor] = useState("#fff");
+  const { onClose, onSave, open } = props;
   const [selectedDate, setSelectedDate] = useState(
     new Date("2014-08-18T21:11:54")
   );
 
+  const defaultReminder = {
+    id: null,
+    description: "",
+    city: "",
+    color: "#fff",
+    datetime: moment(),
+  };
+
+  const [reminder, setReminder] = useState(props.reminder || defaultReminder);
+
+  const handleDescriptionChange = (description) => {
+    setReminder((prev) => {
+      return { ...prev, description };
+    });
+  };
+
+  const handleCityChange = (city) => {
+    setReminder((prev) => {
+      return { ...prev, city };
+    });
+  };
+
+  const handleTimeChange = (date) => {
+    const hours = date.split(":")[0];
+    const minutes = date.split(":")[1];
+    setReminder((prev) => {
+      const datetime = prev.datetime;
+      datetime.hour(hours);
+      datetime.minute(minutes);
+      return { ...prev, datetime };
+    });
+  };
+
   const handleDateChange = (date) => {
-    setSelectedDate(date);
+    const years = date.split("-")[0];
+    const months = date.split("-")[1];
+    const days = date.split("-")[2];
+    // setReminder((prev) => {
+    //   const datetime = prev.datetime;
+    //   datetime.year(years);
+    //   datetime.month(months - 1);
+    //   datetime.day(days);
+    //   return { ...prev, datetime };
+    // });
+  };
+
+  const handleColorChange = (color) => {
+    setReminder((prev) => {
+      return { ...prev, color };
+    });
+  };
+
+  const handleClickSave = () => {
+    console.log(reminder);
   };
 
   return (
@@ -34,36 +86,55 @@ const ReminderDialog = (props) => {
       <DialogTitle id="reminder-dialog">Reminder</DialogTitle>
       <DialogContent>
         <Grid container>
-          <Grid item xs="12">
+          <Grid item xs={12}>
             <TextField
               label="Reminder"
+              value={reminder.description}
               fullWidth
               inputProps={{ maxLength: "30" }}
+              onChange={(e) => handleDescriptionChange(e.target.value)}
             />
           </Grid>
-          <Grid item container xs="12">
-            <Grid item xs="6">
+          <Grid item container xs={12}>
+            <Grid item xs={6}>
               <TextField
-                id="datetime-local"
-                label="Next appointment"
-                type="datetime-local"
-                defaultValue="2017-05-24T10:30"
-                // className={classes.textField}
+                id="date"
+                label="Date"
+                type="date"
+                defaultValue={reminder.datetime.format("YYYY-MM-D")}
                 InputLabelProps={{
                   shrink: true,
                 }}
+                onChange={(e) => handleDateChange(e.target.value)}
+              />
+              <TextField
+                id="time"
+                label="Time"
+                type="time"
+                defaultValue={
+                  reminder.id ? reminder.datetime.format("HH:MM") : ""
+                }
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                onChange={(e) => handleTimeChange(e.target.value)}
               />
             </Grid>
-            <Grid item xs="6">
-              <TextField label="City" fullWidth />
+            <Grid item xs={6}>
+              <TextField
+                label="City"
+                fullWidth
+                value={reminder.city}
+                onChange={(e) => handleCityChange(e.target.value)}
+              />
             </Grid>
           </Grid>
-          <Grid item container xs="12" alignItems="center">
-            <Grid item container xs="6">
-              <Grid item xs="2">
+          <Grid item container xs={12} alignItems="center">
+            <Grid item container xs={6}>
+              <Grid item xs={2}>
                 <Brightness1Icon
                   style={{
-                    color: selectedColor,
+                    color: reminder.color,
                     borderColor: "black",
                     borderWidth: "1px",
                     borderStyle: "solid",
@@ -73,13 +144,13 @@ const ReminderDialog = (props) => {
               <Grid item>
                 <Typography variant="subtitle1">Current color</Typography>
                 <Typography variant="subtitle2" style={{ fontStyle: "italic" }}>
-                  select on right panel
+                  change on right panel
                 </Typography>
               </Grid>
             </Grid>
             <Grid item>
               <CompactPicker
-                onChange={(color) => setSelectedColor(color.hex)}
+                onChange={(color) => handleColorChange(color.hex)}
               />
             </Grid>
           </Grid>
@@ -90,7 +161,7 @@ const ReminderDialog = (props) => {
           <CloseIcon />
           Cancelar
         </Button>
-        <Button onClick={() => alert("todo")} color="primary">
+        <Button onClick={() => handleClickSave()} color="primary">
           <DoneIcon />
           Salvar
         </Button>
