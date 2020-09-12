@@ -21,7 +21,8 @@ const compareReminderMoment = (m1, m2) =>
 
 const Month = ({ monthIndex, year }) => {
   const { reminders } = useSelector((state) => state.app);
-  const [openReminderDialog, setOpenReminderDialog] = useState(true);
+  const [openReminderDialog, setOpenReminderDialog] = useState(false);
+  const [editingReminder, setEditingReminder] = useState(null);
 
   moment.updateLocale("en", {
     week: {
@@ -52,7 +53,12 @@ const Month = ({ monthIndex, year }) => {
     showReminderDialog();
   };
 
-  const showReminderDialog = async (rowData) => {
+  const handleEditReminder = (reminderId) => {
+    setEditingReminder(reminders.find((r) => r.id === reminderId));
+    showReminderDialog();
+  };
+
+  const showReminderDialog = () => {
     setOpenReminderDialog(true);
   };
 
@@ -71,6 +77,7 @@ const Month = ({ monthIndex, year }) => {
           number={mDay.date()}
           reminders={dayReminders}
           handleCreateReminder={handleCreateReminder}
+          handleEditReminder={handleEditReminder}
           key={i}
           currentMonth={false}
         />
@@ -84,6 +91,7 @@ const Month = ({ monthIndex, year }) => {
           number={mDay.date()}
           reminders={dayReminders}
           handleCreateReminder={handleCreateReminder}
+          handleEditReminder={handleEditReminder}
           key={i}
           currentMonth={true}
         />
@@ -133,6 +141,7 @@ const Month = ({ monthIndex, year }) => {
         </Grid>
       </Paper>
       <ReminderDialog
+        reminder={editingReminder}
         open={openReminderDialog}
         onClose={() => setOpenReminderDialog(false)}
         onSave={(data) => handleClickSaveReminder(data)}

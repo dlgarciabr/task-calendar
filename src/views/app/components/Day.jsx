@@ -23,6 +23,7 @@ const Day = ({
   currentMonth,
   reminders = [],
   handleCreateReminder,
+  handleEditReminder,
 }) => {
   const classes = useStyles();
   const isToday = moment().date() === number;
@@ -44,15 +45,18 @@ const Day = ({
         <div style={{ overflowY: "auto", height: "60px" }}>
           {reminders
             .sort((a, b) => (moment(a.datetime).isBefore(b.datetime) ? -1 : 1))
-            .map(({ description, city, datetime, color }) => (
+            .map(({ id, description, city, datetime, color }) => (
               <Tooltip
                 key={Math.random() * 10}
                 title={`${description} on ${city} at ${datetime.format(
-                  "dddd, MMMM Do YYYY, h:mm a"
+                  "dddd, MMMM Do YYYY, hh:mm a"
                 )}`}
               >
-                <div style={color ? { backgroundColor: color } : {}}>
-                  {description}
+                <div
+                  style={color ? { backgroundColor: color } : {}}
+                  onClick={() => handleEditReminder(id)}
+                >
+                  {datetime.format("hh:mm")} {description}
                 </div>
               </Tooltip>
             ))}

@@ -15,30 +15,35 @@ export const initialState = {
   notifications: [],
   reminders: [
     {
+      id: Math.random() * 10,
       description: "note",
       datetime: moment().hour(7),
       color: "#DF74DA",
       city: "Rio",
     },
     {
+      id: Math.random() * 10,
       description: "note aaa",
       datetime: moment().hour(1),
       color: "#74DF8B",
       city: "SP",
     },
     {
+      id: Math.random() * 10,
       description: "note aaa",
       datetime: moment().dates(1).hour(5),
       color: "#74DF8B",
       city: "SP",
     },
     {
+      id: Math.random() * 10,
       description: "note bbb",
       datetime: moment().hour(11),
       color: "#714D55",
       city: "MG",
     },
     {
+      id: Math.random() * 10,
       description: "note dddd",
       datetime: moment().hour(10),
       color: "#DF74DA",

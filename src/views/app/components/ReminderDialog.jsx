@@ -15,9 +15,6 @@ import moment from "moment";
 
 const ReminderDialog = (props) => {
   const { onClose, onSave, open } = props;
-  const [selectedDate, setSelectedDate] = useState(
-    new Date("2014-08-18T21:11:54")
-  );
 
   const defaultReminder = {
     id: null,
@@ -27,7 +24,13 @@ const ReminderDialog = (props) => {
     datetime: moment(),
   };
 
-  const [reminder, setReminder] = useState(props.reminder || defaultReminder);
+  const [reminder, setReminder] = useState(defaultReminder);
+
+  useEffect(() => {
+    if (props.reminder) {
+      setReminder(props.reminder);
+    }
+  }, [props.reminder]);
 
   const handleDescriptionChange = (description) => {
     setReminder((prev) => {
@@ -42,8 +45,8 @@ const ReminderDialog = (props) => {
   };
 
   const handleTimeChange = (date) => {
-    const hours = date.split(":")[0];
-    const minutes = date.split(":")[1];
+    const hours = Number(date.split(":")[0]);
+    const minutes = Number(date.split(":")[1]);
     setReminder((prev) => {
       const datetime = prev.datetime;
       datetime.hour(hours);
@@ -53,16 +56,16 @@ const ReminderDialog = (props) => {
   };
 
   const handleDateChange = (date) => {
-    const years = date.split("-")[0];
-    const months = date.split("-")[1];
-    const days = date.split("-")[2];
-    // setReminder((prev) => {
-    //   const datetime = prev.datetime;
-    //   datetime.year(years);
-    //   datetime.month(months - 1);
-    //   datetime.day(days);
-    //   return { ...prev, datetime };
-    // });
+    const years = Number(date.split("-")[0]);
+    const months = Number(date.split("-")[1]);
+    const days = Number(date.split("-")[2]);
+    setReminder((prev) => {
+      const datetime = prev.datetime;
+      datetime.year(years);
+      datetime.month(months - 1);
+      datetime.date(days);
+      return { ...prev, datetime };
+    });
   };
 
   const handleColorChange = (color) => {
@@ -112,7 +115,7 @@ const ReminderDialog = (props) => {
                 label="Time"
                 type="time"
                 defaultValue={
-                  reminder.id ? reminder.datetime.format("HH:MM") : ""
+                  reminder.id ? reminder.datetime.format("hh:mm") : ""
                 }
                 InputLabelProps={{
                   shrink: true,
