@@ -1,9 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { Grid, Paper, Typography } from "@material-ui/core";
 import moment from "moment";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 
+import ReminderDialog from "./ReminderDialog";
 import Day from "./Day";
 
 const useStyles = makeStyles((theme) => ({
@@ -16,10 +17,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const compareReminderMoment = (m1, m2) =>
-  m1.date() === m2.date() && m1.months() === m2.months();
+  m1.date() === m2.date() && m1.month() === m2.month();
 
 const Month = ({ monthIndex, year }) => {
   const { reminders } = useSelector((state) => state.app);
+  const [openReminderDialog, setOpenReminderDialog] = useState(true);
 
   moment.updateLocale("en", {
     week: {
@@ -46,6 +48,14 @@ const Month = ({ monthIndex, year }) => {
 
   const dayComponents = [];
 
+  const handleCreateReminder = () => {
+    showReminderDialog();
+  };
+
+  const showReminderDialog = async (rowData) => {
+    setOpenReminderDialog(true);
+  };
+
   for (var i = 1; i <= mYear.dayOfYear(); i++) {
     const mDay = moment().dayOfYear(i);
 
@@ -60,6 +70,7 @@ const Month = ({ monthIndex, year }) => {
         <Day
           number={mDay.date()}
           reminders={dayReminders}
+          handleCreateReminder={handleCreateReminder}
           key={i}
           currentMonth={false}
         />
@@ -72,6 +83,7 @@ const Month = ({ monthIndex, year }) => {
         <Day
           number={mDay.date()}
           reminders={dayReminders}
+          handleCreateReminder={handleCreateReminder}
           key={i}
           currentMonth={true}
         />
@@ -79,32 +91,53 @@ const Month = ({ monthIndex, year }) => {
     }
   }
 
+  const handleClickSaveReminder = async (data) => {
+    // const rulesToSave = data
+    //   .filter(({ id, selected }) => !(!id && !selected))
+    //   .map(({ id, groupName, menuCode, selected }) => ({
+    //     id,
+    //     groupName,
+    //     menuCode,
+    //     deleted: !selected,
+    //   }));
+
+    setOpenReminderDialog(false);
+    // await saveRules([...rulesToSave]);
+  };
+
   return (
-    <Paper elevation={1}>
-      <Grid container spacing={1}>
-        <Grid item xs={12}>
-          <Typography variant="h4">{monthName}</Typography>
-        </Grid>
-        {weekArray.map((weekday) => (
-          <Grid
-            color="seconday"
-            item
-            key={Math.random() * 10}
-            className={classes.day}
-            style={{ textAlign: "center" }}
-          >
-            <Paper elevation={3} className={classes.weekday}>
-              <Typography variant="subtitle1" style={{ color: "#fff" }}>
-                {weekday}
-              </Typography>
-            </Paper>
+    <>
+      <Paper elevation={1}>
+        <Grid container spacing={1}>
+          <Grid item xs={12}>
+            <Typography variant="h4">{monthName}</Typography>
           </Grid>
-        ))}
-        <Grid item container spacing={1}>
-          {dayComponents}
+          {weekArray.map((weekday) => (
+            <Grid
+              color="seconday"
+              item
+              key={Math.random() * 10}
+              className={classes.day}
+              style={{ textAlign: "center" }}
+            >
+              <Paper elevation={3} className={classes.weekday}>
+                <Typography variant="subtitle1" style={{ color: "#fff" }}>
+                  {weekday}
+                </Typography>
+              </Paper>
+            </Grid>
+          ))}
+          <Grid item container spacing={1}>
+            {dayComponents}
+          </Grid>
         </Grid>
-      </Grid>
-    </Paper>
+      </Paper>
+      <ReminderDialog
+        open={openReminderDialog}
+        onClose={() => setOpenReminderDialog(false)}
+        onSave={(data) => handleClickSaveReminder(data)}
+      />
+    </>
   );
 };
 

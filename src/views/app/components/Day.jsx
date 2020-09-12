@@ -1,6 +1,7 @@
 import React from "react";
 import { Grid, Paper, Tooltip, Typography } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
+import IconAddCircle from "@material-ui/icons/AddCircle";
 import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
@@ -17,7 +18,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Day = ({ number, currentMonth, reminders = [] }) => {
+const Day = ({
+  number,
+  currentMonth,
+  reminders = [],
+  handleCreateReminder,
+}) => {
   const classes = useStyles();
   const isToday = moment().date() === number;
 
@@ -28,7 +34,13 @@ const Day = ({ number, currentMonth, reminders = [] }) => {
         style={isToday ? { backgroundColor: "#DFCA74" } : {}}
         className={currentMonth ? classes.currentMonth : classes.otherMonth}
       >
-        <Typography variant="h6">{number}</Typography>
+        <Typography variant="h6">
+          {number}
+          <IconAddCircle
+            style={{ float: "right", cursor: "pointer" }}
+            onClick={handleCreateReminder}
+          />
+        </Typography>
         <div style={{ overflowY: "auto", height: "60px" }}>
           {reminders
             .sort((a, b) => (moment(a.datetime).isBefore(b.datetime) ? -1 : 1))
