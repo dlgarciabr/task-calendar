@@ -14,6 +14,7 @@ import { Typography } from "@material-ui/core";
 import { useDispatch } from "react-redux";
 
 import { showErrorMessage } from "../ducks";
+import { getWeather } from "../apis";
 
 const ReminderDialog = (props) => {
   const { onClose, onSave, open } = props;
@@ -35,6 +36,7 @@ const ReminderDialog = (props) => {
   const [dayError, setDayError] = useState(false);
   const [timeError, setTimeError] = useState(false);
   const [cityError, setCityError] = useState(false);
+  const [cityWeather, setCityWeather] = useState({});
 
   useEffect(() => {
     if (props.reminder) {
@@ -130,6 +132,11 @@ const ReminderDialog = (props) => {
     onClose();
   };
 
+  const getWeatherForecast = async () => {
+    const weather = await getWeather(reminder.city);
+    setCityWeather(weather);
+  };
+
   return (
     <Dialog
       aria-labelledby="reminder-dialog"
@@ -140,42 +147,42 @@ const ReminderDialog = (props) => {
     >
       <DialogTitle id="reminder-dialog">Reminder</DialogTitle>
       <DialogContent>
-        <Grid container>
-          <Grid item xs={12}>
+        <Grid container spacing={1}>
+          <Grid item xs={6}>
             <TextField
               error={descriptionError}
               label="Description"
-              value={reminder.description}
               fullWidth
+              value={reminder.description}
               inputProps={{ maxLength: "30" }}
               onChange={(e) => handleDescriptionChange(e.target.value)}
             />
           </Grid>
+          <Grid item xs={6}>
+            <TextField
+              id="date"
+              label="Date"
+              type="date"
+              error={dayError}
+              defaultValue={temporayDate}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={(e) => handleDateChange(e.target.value)}
+            />
+            <TextField
+              id="time"
+              label="Time"
+              type="time"
+              error={timeError}
+              defaultValue={temporayTime}
+              InputLabelProps={{
+                shrink: true,
+              }}
+              onChange={(e) => handleTimeChange(e.target.value)}
+            />
+          </Grid>
           <Grid item container xs={12}>
-            <Grid item xs={6}>
-              <TextField
-                id="date"
-                label="Date"
-                type="date"
-                error={dayError}
-                defaultValue={temporayDate}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={(e) => handleDateChange(e.target.value)}
-              />
-              <TextField
-                id="time"
-                label="Time"
-                type="time"
-                error={timeError}
-                defaultValue={temporayTime}
-                InputLabelProps={{
-                  shrink: true,
-                }}
-                onChange={(e) => handleTimeChange(e.target.value)}
-              />
-            </Grid>
             <Grid item xs={6}>
               <TextField
                 label="City"
@@ -184,6 +191,24 @@ const ReminderDialog = (props) => {
                 value={reminder.city}
                 onChange={(e) => handleCityChange(e.target.value)}
               />
+            </Grid>
+            <Grid item container xs={6}>
+              <Grid item xs={5}>
+                <Button
+                  variant="outlined"
+                  size="small"
+                  onClick={getWeatherForecast}
+                >
+                  forecast
+                </Button>
+              </Grid>
+              <Grid item xs={7}>
+                <Typography variant="subtitle1">
+                  {cityWeather.temp
+                    ? `${cityWeather.temp}°C - ${cityWeather.condition}`
+                    : cityWeather.errorMessage}
+                </Typography>
+              </Grid>
             </Grid>
           </Grid>
           <Grid item container xs={12} alignItems="center">
