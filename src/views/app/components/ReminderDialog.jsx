@@ -21,7 +21,7 @@ const ReminderDialog = (props) => {
     description: "",
     city: "",
     color: "#fff",
-    datetime: moment(),
+    datetime: null,
   };
 
   const [reminder, setReminder] = useState(defaultReminder);
@@ -109,7 +109,11 @@ const ReminderDialog = (props) => {
                 id="date"
                 label="Date"
                 type="date"
-                defaultValue={reminder.datetime.format("YYYY-MM-DD")}
+                defaultValue={
+                  reminder.datetime
+                    ? reminder.datetime.format("YYYY-MM-DD")
+                    : ""
+                }
                 InputLabelProps={{
                   shrink: true,
                 }}

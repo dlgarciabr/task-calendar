@@ -8,7 +8,8 @@ export const types = {
   ENQUEUE_SNACKBAR: "views/app/ENQUEUE_SNACKBAR",
   CLOSE_SNACKBAR: "views/app/CLOSE_SNACKBAR",
   REMOVE_SNACKBAR: "views/app/REMOVE_SNACKBAR",
-  REMINDER_SAVED: "views/app/REMINDER_SAVED",
+  REMINDER_CREATED: "views/app/REMINDER_CREATED",
+  REMINDER_EDITED: "views/app/REMINDER_EDITED",
 };
 
 // initial state
@@ -61,10 +62,20 @@ export default (state = initialState, action) => {
         ...state,
         notifications: [action.payload],
       };
-    case types.REMINDER_SAVED:
+    case types.REMINDER_CREATED:
       return {
         ...state,
         reminders: [...state.reminders, action.payload.reminder],
+      };
+    case types.REMINDER_EDITED:
+      const payloadReminder = action.payload.reminder;
+      const nextReminders = [...state.reminders];
+      nextReminders[
+        nextReminders.findIndex((r) => r.id === payloadReminder.id)
+      ] = payloadReminder;
+      return {
+        ...state,
+        reminders: [...nextReminders],
       };
     default:
       return state;
@@ -90,8 +101,15 @@ export const getErrorMessage = (message) => ({
   },
 });
 
-export const saveReminder = (reminder) => ({
-  type: types.REMINDER_SAVED,
+export const createReminder = (reminder) => ({
+  type: types.REMINDER_CREATED,
+  payload: {
+    reminder: reminder,
+  },
+});
+
+export const editReminder = (reminder) => ({
+  type: types.REMINDER_EDITED,
   payload: {
     reminder: reminder,
   },

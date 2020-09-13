@@ -4,7 +4,7 @@ import moment from "moment";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 
-import { saveReminder } from "../ducks";
+import { createReminder, editReminder } from "../ducks";
 import ReminderDialog from "./ReminderDialog";
 import Day from "./Day";
 
@@ -32,8 +32,6 @@ const Month = ({ monthIndex, year }) => {
     },
   });
 
-  console.log("monthIndex", monthIndex);
-  console.log("year", year);
   const classes = useStyles();
 
   const weekArray = moment.weekdays();
@@ -51,7 +49,14 @@ const Month = ({ monthIndex, year }) => {
 
   const dayComponents = [];
 
-  const handleCreateReminder = () => {
+  const handleCreateReminder = (mDay) => {
+    setEditingReminder({
+      id: null,
+      description: "",
+      city: "",
+      color: "#DAF7A6",
+      datetime: mDay,
+    });
     showReminderDialog();
   };
 
@@ -62,6 +67,16 @@ const Month = ({ monthIndex, year }) => {
 
   const showReminderDialog = () => {
     setOpenReminderDialog(true);
+  };
+
+  const handleClickSaveReminder = (reminder) => {
+    if (reminder.id) {
+      dispatch(editReminder(reminder));
+    } else {
+      dispatch(createReminder({ ...reminder, id: Date.now() }));
+    }
+
+    setOpenReminderDialog(false);
   };
 
   for (var i = 1; i <= mYear.dayOfYear(); i++) {
@@ -78,7 +93,7 @@ const Month = ({ monthIndex, year }) => {
         <Day
           number={mDay.date()}
           reminders={dayReminders}
-          handleCreateReminder={handleCreateReminder}
+          handleCreateReminder={() => handleCreateReminder(mDay)}
           handleEditReminder={handleEditReminder}
           key={i}
           currentMonth={false}
@@ -92,7 +107,7 @@ const Month = ({ monthIndex, year }) => {
         <Day
           number={mDay.date()}
           reminders={dayReminders}
-          handleCreateReminder={handleCreateReminder}
+          handleCreateReminder={() => handleCreateReminder(mDay.clone())}
           handleEditReminder={handleEditReminder}
           key={i}
           currentMonth={true}
@@ -100,11 +115,6 @@ const Month = ({ monthIndex, year }) => {
       );
     }
   }
-
-  const handleClickSaveReminder = (reminder) => {
-    dispatch(saveReminder(reminder));
-    setOpenReminderDialog(false);
-  };
 
   return (
     <>
