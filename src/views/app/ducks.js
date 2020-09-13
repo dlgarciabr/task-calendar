@@ -8,6 +8,7 @@ export const types = {
   ENQUEUE_SNACKBAR: "views/app/ENQUEUE_SNACKBAR",
   CLOSE_SNACKBAR: "views/app/CLOSE_SNACKBAR",
   REMOVE_SNACKBAR: "views/app/REMOVE_SNACKBAR",
+  REMINDER_SAVED: "views/app/REMINDER_SAVED",
 };
 
 // initial state
@@ -60,6 +61,11 @@ export default (state = initialState, action) => {
         ...state,
         notifications: [action.payload],
       };
+    case types.REMINDER_SAVED:
+      return {
+        ...state,
+        reminders: [...state.reminders, action.payload.reminder],
+      };
     default:
       return state;
   }
@@ -81,5 +87,12 @@ export const getErrorMessage = (message) => ({
     message: message || messages.OPERATION_ERROR,
     variant: "error",
     key: new Date().getTime(),
+  },
+});
+
+export const saveReminder = (reminder) => ({
+  type: types.REMINDER_SAVED,
+  payload: {
+    reminder: reminder,
   },
 });

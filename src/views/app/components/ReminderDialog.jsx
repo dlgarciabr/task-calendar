@@ -75,14 +75,19 @@ const ReminderDialog = (props) => {
   };
 
   const handleClickSave = () => {
-    console.log(reminder);
+    onSave(reminder);
+  };
+
+  const handleClose = () => {
+    setReminder(defaultReminder);
+    onClose();
   };
 
   return (
     <Dialog
       aria-labelledby="reminder-dialog"
       open={open}
-      onClose={onClose}
+      onClose={handleClose}
       maxWidth={"sm"}
       fullWidth
     >
@@ -104,7 +109,7 @@ const ReminderDialog = (props) => {
                 id="date"
                 label="Date"
                 type="date"
-                defaultValue={reminder.datetime.format("YYYY-MM-D")}
+                defaultValue={reminder.datetime.format("YYYY-MM-DD")}
                 InputLabelProps={{
                   shrink: true,
                 }}

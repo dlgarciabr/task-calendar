@@ -4,6 +4,7 @@ import moment from "moment";
 import { makeStyles } from "@material-ui/core/styles";
 import { useSelector, useDispatch } from "react-redux";
 
+import { saveReminder } from "../ducks";
 import ReminderDialog from "./ReminderDialog";
 import Day from "./Day";
 
@@ -23,6 +24,7 @@ const Month = ({ monthIndex, year }) => {
   const { reminders } = useSelector((state) => state.app);
   const [openReminderDialog, setOpenReminderDialog] = useState(false);
   const [editingReminder, setEditingReminder] = useState(null);
+  const dispatch = useDispatch();
 
   moment.updateLocale("en", {
     week: {
@@ -99,18 +101,9 @@ const Month = ({ monthIndex, year }) => {
     }
   }
 
-  const handleClickSaveReminder = async (data) => {
-    // const rulesToSave = data
-    //   .filter(({ id, selected }) => !(!id && !selected))
-    //   .map(({ id, groupName, menuCode, selected }) => ({
-    //     id,
-    //     groupName,
-    //     menuCode,
-    //     deleted: !selected,
-    //   }));
-
+  const handleClickSaveReminder = (reminder) => {
+    dispatch(saveReminder(reminder));
     setOpenReminderDialog(false);
-    // await saveRules([...rulesToSave]);
   };
 
   return (
@@ -144,7 +137,7 @@ const Month = ({ monthIndex, year }) => {
         reminder={editingReminder}
         open={openReminderDialog}
         onClose={() => setOpenReminderDialog(false)}
-        onSave={(data) => handleClickSaveReminder(data)}
+        onSave={(reminder) => handleClickSaveReminder(reminder)}
       />
     </>
   );

@@ -53,7 +53,11 @@ const Day = ({
                 )}`}
               >
                 <div
-                  style={color ? { backgroundColor: color } : {}}
+                  style={
+                    color
+                      ? { backgroundColor: color, cursor: "pointer" }
+                      : { cursor: "pointer" }
+                  }
                   onClick={() => handleEditReminder(id)}
                 >
                   {datetime.format("hh:mm")} {description}
