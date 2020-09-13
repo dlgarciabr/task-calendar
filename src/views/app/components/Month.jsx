@@ -82,7 +82,7 @@ const Month = ({ monthIndex, year }) => {
   };
 
   for (var i = 1; i <= mYear.dayOfYear(); i++) {
-    const mDay = moment().dayOfYear(i);
+    const mDay = moment().dayOfYear(i).year(year);
 
     if (
       (mDay.week() === firstWeekOfMonth || mDay.week() === lastWeekOfMonth) &&
@@ -93,7 +93,7 @@ const Month = ({ monthIndex, year }) => {
       );
       dayComponents.push(
         <Day
-          number={mDay.date()}
+          currentMoment={mDay}
           reminders={dayReminders}
           handleCreateReminder={() => handleCreateReminder(mDay)}
           handleEditReminder={handleEditReminder}
@@ -107,7 +107,7 @@ const Month = ({ monthIndex, year }) => {
       );
       dayComponents.push(
         <Day
-          number={mDay.date()}
+          currentMoment={mDay}
           reminders={dayReminders}
           handleCreateReminder={() => handleCreateReminder(mDay.clone())}
           handleEditReminder={handleEditReminder}

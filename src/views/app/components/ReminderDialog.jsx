@@ -12,6 +12,7 @@ import Grid from "@material-ui/core/Grid";
 import { CompactPicker } from "react-color";
 import { Typography } from "@material-ui/core";
 import { useDispatch } from "react-redux";
+import moment from "moment";
 
 import { showErrorMessage } from "../ducks";
 import { getWeather } from "../apis";
@@ -129,11 +130,19 @@ const ReminderDialog = (props) => {
 
   const handleClose = () => {
     setReminder(defaultReminder);
+    setCityWeather({});
     onClose();
   };
 
   const getWeatherForecast = async () => {
-    const weather = await getWeather(reminder.city);
+    const today = moment();
+    const isToday =
+      today.dayOfYear() === reminder.datetime.dayOfYear() &&
+      today.year() === reminder.datetime.year();
+    let weather = { errorMessage: "Not available" };
+    if (isToday) {
+      weather = await getWeather(reminder.city);
+    }
     setCityWeather(weather);
   };
 

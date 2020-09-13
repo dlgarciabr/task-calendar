@@ -19,14 +19,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Day = ({
-  number,
+  currentMoment,
   currentMonth,
   reminders = [],
   handleCreateReminder,
   handleEditReminder,
 }) => {
   const classes = useStyles();
-  const isToday = moment().date() === number;
+  const today = moment();
+  const isToday =
+    //  today.isSame(currentMoment, "dayOfYear") &&
+    // today.isSame(currentMoment, "year");
+    today.dayOfYear() === currentMoment.dayOfYear() &&
+    today.year() === currentMoment.year();
 
   return (
     <Grid item className={classes.dayGrid}>
@@ -36,7 +41,7 @@ const Day = ({
         className={currentMonth ? classes.currentMonth : classes.otherMonth}
       >
         <Typography variant="h6">
-          {number}
+          {currentMoment.date()}
           <IconAddCircle
             style={{ float: "right", cursor: "pointer" }}
             onClick={handleCreateReminder}
