@@ -11,10 +11,13 @@ import DialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
 import { CompactPicker } from "react-color";
 import { Typography } from "@material-ui/core";
-import moment from "moment";
+import { useDispatch } from "react-redux";
+
+import { showErrorMessage } from "../ducks";
 
 const ReminderDialog = (props) => {
   const { onClose, onSave, open } = props;
+  const dispatch = useDispatch();
 
   const defaultReminder = {
     id: null,
@@ -26,9 +29,20 @@ const ReminderDialog = (props) => {
 
   const [reminder, setReminder] = useState(defaultReminder);
 
+  const [temporayDate, setTemporayDate] = useState("");
+  const [temporayTime, setTemporayTime] = useState("");
+  const [descriptionError, setDescriptionError] = useState(false);
+  const [dayError, setDayError] = useState(false);
+  const [timeError, setTimeError] = useState(false);
+  const [cityError, setCityError] = useState(false);
+
   useEffect(() => {
     if (props.reminder) {
       setReminder(props.reminder);
+      setTemporayDate(props.reminder.datetime.format("YYYY-MM-DD"));
+      if (props.reminder.id) {
+        setTemporayTime(props.reminder.datetime.format("hh:mm"));
+      }
     }
   }, [props.reminder]);
 
@@ -45,6 +59,7 @@ const ReminderDialog = (props) => {
   };
 
   const handleTimeChange = (date) => {
+    setTemporayTime(date);
     const hours = Number(date.split(":")[0]);
     const minutes = Number(date.split(":")[1]);
     setReminder((prev) => {
@@ -56,6 +71,7 @@ const ReminderDialog = (props) => {
   };
 
   const handleDateChange = (date) => {
+    setTemporayDate(date);
     const years = Number(date.split("-")[0]);
     const months = Number(date.split("-")[1]);
     const days = Number(date.split("-")[2]);
@@ -75,6 +91,37 @@ const ReminderDialog = (props) => {
   };
 
   const handleClickSave = () => {
+    setDescriptionError(false);
+    setDayError(false);
+    setTimeError(false);
+    setCityError(false);
+
+    let hasErrors = false;
+
+    if (!reminder.description) {
+      hasErrors = true;
+      setDescriptionError(true);
+    }
+
+    if (!temporayDate) {
+      hasErrors = true;
+      setDayError(true);
+    }
+
+    if (!temporayTime) {
+      hasErrors = true;
+      setTimeError(true);
+    }
+
+    if (!reminder.city) {
+      hasErrors = true;
+      setCityError(true);
+    }
+
+    if (hasErrors) {
+      dispatch(showErrorMessage("Please fill the required fields"));
+      return;
+    }
     onSave(reminder);
   };
 
@@ -96,7 +143,8 @@ const ReminderDialog = (props) => {
         <Grid container>
           <Grid item xs={12}>
             <TextField
-              label="Reminder"
+              error={descriptionError}
+              label="Description"
               value={reminder.description}
               fullWidth
               inputProps={{ maxLength: "30" }}
@@ -109,11 +157,8 @@ const ReminderDialog = (props) => {
                 id="date"
                 label="Date"
                 type="date"
-                defaultValue={
-                  reminder.datetime
-                    ? reminder.datetime.format("YYYY-MM-DD")
-                    : ""
-                }
+                error={dayError}
+                defaultValue={temporayDate}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -123,9 +168,8 @@ const ReminderDialog = (props) => {
                 id="time"
                 label="Time"
                 type="time"
-                defaultValue={
-                  reminder.id ? reminder.datetime.format("hh:mm") : ""
-                }
+                error={timeError}
+                defaultValue={temporayTime}
                 InputLabelProps={{
                   shrink: true,
                 }}
@@ -136,6 +180,7 @@ const ReminderDialog = (props) => {
               <TextField
                 label="City"
                 fullWidth
+                error={cityError}
                 value={reminder.city}
                 onChange={(e) => handleCityChange(e.target.value)}
               />

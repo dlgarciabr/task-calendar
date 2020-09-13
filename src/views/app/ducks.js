@@ -83,7 +83,7 @@ export default (state = initialState, action) => {
 };
 
 // Action Creators
-export const getSuccessMessage = () => ({
+export const showSuccessMessage = () => ({
   type: types.ENQUEUE_SNACKBAR,
   payload: {
     message: messages.OPERATION_SUCCESSFULL,
@@ -92,7 +92,7 @@ export const getSuccessMessage = () => ({
   },
 });
 
-export const getErrorMessage = (message) => ({
+export const showErrorMessage = (message) => ({
   type: types.ENQUEUE_SNACKBAR,
   payload: {
     message: message || messages.OPERATION_ERROR,

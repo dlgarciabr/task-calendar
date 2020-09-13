@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { createReminder, editReminder } from "../ducks";
 import ReminderDialog from "./ReminderDialog";
 import Day from "./Day";
+import { showSuccessMessage } from "../ducks";
 
 const useStyles = makeStyles((theme) => ({
   weekday: {
@@ -77,6 +78,7 @@ const Month = ({ monthIndex, year }) => {
     }
 
     setOpenReminderDialog(false);
+    dispatch(showSuccessMessage());
   };
 
   for (var i = 1; i <= mYear.dayOfYear(); i++) {
