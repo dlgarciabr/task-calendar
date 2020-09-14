@@ -9,6 +9,7 @@ import Brightness1Icon from "@material-ui/icons/Brightness1";
 import TextField from "@material-ui/core/TextField";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Grid from "@material-ui/core/Grid";
+import Tooltip from "@material-ui/core/Tooltip";
 import { CompactPicker } from "react-color";
 import { Typography } from "@material-ui/core";
 import { useDispatch } from "react-redux";
@@ -38,14 +39,23 @@ const ReminderDialog = (props) => {
   const [timeError, setTimeError] = useState(false);
   const [cityError, setCityError] = useState(false);
   const [cityWeather, setCityWeather] = useState({});
+  const [isToday, setIsToday] = useState(false);
 
   useEffect(() => {
     if (props.reminder) {
+      console.log("useEffect");
       setReminder(props.reminder);
       setTemporayDate(props.reminder.datetime.format("YYYY-MM-DD"));
+
       if (props.reminder.id) {
         setTemporayTime(props.reminder.datetime.format("hh:mm"));
       }
+
+      const today = moment();
+      setIsToday(
+        today.dayOfYear() === props.reminder.datetime.dayOfYear() &&
+          today.year() === props.reminder.datetime.year()
+      );
     }
   }, [props.reminder]);
 
@@ -135,10 +145,6 @@ const ReminderDialog = (props) => {
   };
 
   const getWeatherForecast = async () => {
-    const today = moment();
-    const isToday =
-      today.dayOfYear() === reminder.datetime.dayOfYear() &&
-      today.year() === reminder.datetime.year();
     let weather = { errorMessage: "Not available" };
     if (isToday) {
       weather = await getWeather(reminder.city);
@@ -202,15 +208,24 @@ const ReminderDialog = (props) => {
               />
             </Grid>
             <Grid item container xs={6}>
-              <Grid item xs={5}>
-                <Button
-                  variant="outlined"
-                  size="small"
-                  onClick={getWeatherForecast}
-                >
-                  forecast
-                </Button>
-              </Grid>
+              <Tooltip
+                title={
+                  isToday
+                    ? "Click to show weather forecast"
+                    : "Weater forecast is currently available only for the current day"
+                }
+              >
+                <Grid item xs={5}>
+                  <Button
+                    variant="outlined"
+                    size="small"
+                    onClick={getWeatherForecast}
+                    disabled={!isToday}
+                  >
+                    forecast
+                  </Button>
+                </Grid>
+              </Tooltip>
               <Grid item xs={7}>
                 <Typography variant="subtitle1">
                   {cityWeather.temp

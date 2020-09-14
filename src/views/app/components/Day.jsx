@@ -28,8 +28,6 @@ const Day = ({
   const classes = useStyles();
   const today = moment();
   const isToday =
-    //  today.isSame(currentMoment, "dayOfYear") &&
-    // today.isSame(currentMoment, "year");
     today.dayOfYear() === currentMoment.dayOfYear() &&
     today.year() === currentMoment.year();
 

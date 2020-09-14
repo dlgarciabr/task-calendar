@@ -62,7 +62,10 @@ const Month = ({ monthIndex, year }) => {
   };
 
   const handleEditReminder = (reminderId) => {
-    setEditingReminder(reminders.find((r) => r.id === reminderId));
+    setEditingReminder({
+      ...reminders.find((r) => r.id === reminderId),
+      uuid: Date.now(),
+    });
     showReminderDialog();
   };
 
