@@ -2,7 +2,7 @@ import React from "react";
 import userEvent from "@testing-library/user-event";
 import moment from "moment";
 
-import { render, screen, APP_COMPONENT_KEY } from "./utils/test-utils";
+import { render, screen, waitFor } from "./utils/test-utils";
 import App from "./App";
 
 afterEach(() => {
@@ -14,22 +14,43 @@ describe("Reminders", () => {
     //arrange
     const today = moment();
     const description = "new test reminder";
-    const date = today.format("MM-DD-YYYY");
-    const time = "13:00";
+    const date = today.format("MM/DD/YYYY");
+    const time = "10:00 AM";
     const city = "Monaco";
 
-    //act
+    const createReminderAriaLabel = `create reminder to day ${today.date()} of ${today.format(
+      "MMMM"
+    )}`;
+
     render(<App />);
 
-    //TODO click on card of today
+    //act
+    const createReminderButton = screen.getByRole("button", {
+      name: createReminderAriaLabel,
+    });
 
-    //TODO check if dialog opened
+    userEvent.click(createReminderButton);
 
-    //TODO fullfill dialog
+    expect(
+      screen.getByRole("heading", { name: "Create reminder" })
+    ).toBeInTheDocument();
 
-    //TODO save reminder
+    userEvent.type(screen.getByTestId("input-description"), description);
+    userEvent.type(screen.getByTestId("input-date"), date);
+    userEvent.type(screen.getByTestId("input-time"), time);
+    userEvent.type(screen.getByTestId("input-city"), city);
+
+    userEvent.click(screen.getByRole("button", { name: "Save" }));
 
     //assert
+    // await waitFor(() =>
+    //   expect(
+    //     screen.queryByRole("heading", { name: "Create reminder" })
+    //   ).not.toBeInTheDocument()
+    // );
+    await waitFor(() =>
+      expect(screen.queryByText("Create reminder")).not.toBeInTheDocument()
+    );
 
     //TODO check if reminder is shown on calendar
 

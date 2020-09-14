@@ -1,14 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { withSnackbar } from "notistack";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 
 import CssBaseline from "@material-ui/core/CssBaseline";
 import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
 import Toolbar from "@material-ui/core/Toolbar";
-import IconButton from "@material-ui/core/IconButton";
 import Container from "@material-ui/core/Container";
-import Tooltip from "@material-ui/core/Tooltip";
 import moment from "moment";
 
 import useStyles from "./App.styles";
@@ -16,7 +14,6 @@ import Month from "./views/app/components/Month";
 
 function App(props) {
   const classes = useStyles();
-  const dispatch = useDispatch();
   const { notifications } = useSelector((state) => state.app);
 
   useEffect(() => {

@@ -33,7 +33,7 @@ export const initialState = {
     {
       id: Math.random() * 10,
       description: "note aaa",
-      datetime: moment().dates(1).hour(5),
+      datetime: moment().date(1).hour(5),
       color: "#74DF8B",
       city: "Valleta",
     },

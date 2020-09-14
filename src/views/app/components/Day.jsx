@@ -1,7 +1,14 @@
 import React from "react";
-import { Grid, Paper, Tooltip, Typography } from "@material-ui/core";
+import {
+  Grid,
+  Paper,
+  Tooltip,
+  Typography,
+  IconButton,
+} from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import IconAddCircle from "@material-ui/icons/AddCircle";
+
 import moment from "moment";
 
 const useStyles = makeStyles((theme) => ({
@@ -31,6 +38,10 @@ const Day = ({
     today.dayOfYear() === currentMoment.dayOfYear() &&
     today.year() === currentMoment.year();
 
+  const tooltipMessage = `create reminder to day ${currentMoment.date()} of ${currentMoment.format(
+    "MMMM"
+  )}`;
+
   return (
     <Grid item className={classes.dayGrid}>
       <Paper
@@ -40,10 +51,17 @@ const Day = ({
       >
         <Typography variant="h6">
           {currentMoment.date()}
-          <IconAddCircle
-            style={{ float: "right", cursor: "pointer" }}
-            onClick={handleCreateReminder}
-          />
+          <Tooltip title={tooltipMessage}>
+            <IconButton
+              color="primary"
+              aria-label={tooltipMessage}
+              component="span"
+              style={{ float: "right", padding: "5px 5px 0px 0px" }}
+              onClick={handleCreateReminder}
+            >
+              <IconAddCircle />
+            </IconButton>
+          </Tooltip>
         </Typography>
         <div style={{ overflowY: "auto", height: "60px" }}>
           {reminders
