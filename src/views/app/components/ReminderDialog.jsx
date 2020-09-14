@@ -136,6 +136,8 @@ const ReminderDialog = (props) => {
       dispatch(showErrorMessage("Please fill the required fields"));
       return;
     }
+
+    setTemporayTime("");
     onSave(reminder);
   };
 
@@ -193,18 +195,20 @@ const ReminderDialog = (props) => {
               onChange={(e) => handleDateChange(e.target.value)}
             />
             <TextField
-              id="time"
+              id="Time"
+              data-testid="input-time"
               label="Time"
               type="time"
               error={timeError}
               defaultValue={temporayTime}
               inputProps={{
-                "data-testid": "input-time",
+                onChange: (e) => {
+                  handleTimeChange(e.target.value);
+                },
               }}
               InputLabelProps={{
                 shrink: true,
               }}
-              onChange={(e) => handleTimeChange(e.target.value)}
             />
           </Grid>
           <Grid item container xs={12}>
