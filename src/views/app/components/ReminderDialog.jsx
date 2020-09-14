@@ -40,14 +40,15 @@ const ReminderDialog = (props) => {
   const [cityError, setCityError] = useState(false);
   const [cityWeather, setCityWeather] = useState({});
   const [isToday, setIsToday] = useState(false);
+  const [dialogTitle, setDialogTitle] = useState("Create reminder");
 
   useEffect(() => {
     if (props.reminder) {
-      console.log("useEffect");
       setReminder(props.reminder);
       setTemporayDate(props.reminder.datetime.format("YYYY-MM-DD"));
 
       if (props.reminder.id) {
+        setDialogTitle("Edit reminder");
         setTemporayTime(props.reminder.datetime.format("hh:mm"));
       }
 
@@ -139,7 +140,7 @@ const ReminderDialog = (props) => {
   };
 
   const handleClose = () => {
-    setReminder(defaultReminder);
+    setTemporayTime("");
     setCityWeather({});
     onClose();
   };
@@ -160,7 +161,7 @@ const ReminderDialog = (props) => {
       maxWidth={"sm"}
       fullWidth
     >
-      <DialogTitle id="reminder-dialog">Reminder</DialogTitle>
+      <DialogTitle id="reminder-dialog">{dialogTitle}</DialogTitle>
       <DialogContent>
         <Grid container spacing={1}>
           <Grid item xs={6}>
@@ -169,7 +170,10 @@ const ReminderDialog = (props) => {
               label="Description"
               fullWidth
               value={reminder.description}
-              inputProps={{ maxLength: "30" }}
+              inputProps={{
+                maxLength: "30",
+                "data-testid": "input-description",
+              }}
               onChange={(e) => handleDescriptionChange(e.target.value)}
             />
           </Grid>
@@ -180,6 +184,9 @@ const ReminderDialog = (props) => {
               type="date"
               error={dayError}
               defaultValue={temporayDate}
+              inputProps={{
+                "data-testid": "input-date",
+              }}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -191,6 +198,9 @@ const ReminderDialog = (props) => {
               type="time"
               error={timeError}
               defaultValue={temporayTime}
+              inputProps={{
+                "data-testid": "input-time",
+              }}
               InputLabelProps={{
                 shrink: true,
               }}
@@ -203,6 +213,9 @@ const ReminderDialog = (props) => {
                 label="City"
                 fullWidth
                 error={cityError}
+                inputProps={{
+                  "data-testid": "input-city",
+                }}
                 value={reminder.city}
                 onChange={(e) => handleCityChange(e.target.value)}
               />
@@ -263,13 +276,13 @@ const ReminderDialog = (props) => {
         </Grid>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} color="primary">
+        <Button onClick={handleClose} color="primary">
           <CloseIcon />
-          Cancelar
+          Cancel
         </Button>
         <Button onClick={() => handleClickSave()} color="primary">
           <DoneIcon />
-          Salvar
+          Save
         </Button>
       </DialogActions>
     </Dialog>
