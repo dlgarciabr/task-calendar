@@ -7,7 +7,6 @@ import AppBar from "@material-ui/core/AppBar";
 import Typography from "@material-ui/core/Typography";
 import Toolbar from "@material-ui/core/Toolbar";
 import Container from "@material-ui/core/Container";
-import moment from "moment";
 
 import useStyles from "./App.styles";
 import Month from "./views/app/components/Month";
@@ -24,8 +23,6 @@ function App(props) {
     });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notifications]);
-
-  const date = moment();
 
   return (
     <div className={classes.root}>
@@ -46,7 +43,7 @@ function App(props) {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="xl" className={classes.container}>
-          <Month monthIndex={date.month()} year={date.year()} />
+          <Month />
         </Container>
       </main>
     </div>

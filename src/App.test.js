@@ -59,12 +59,5 @@ describe("Reminders", () => {
     ].find((n) => n.innerHTML === `${time} ${description}`);
 
     expect(reminder).toBeInTheDocument();
-
-    //TODO try to open edit dialog (opcional)
-
-    // expect(materiaTextField.childNodes[1].firstChild.value).toBe(time);
-    // expect(screen.getByText(/All Nations/i)).toBeInTheDocument();
-    // expect(mockAxios.get).toHaveBeenCalledTimes(1);
-    // expect(await screen.findByText(username)).toBeInTheDocument();
   });
 });

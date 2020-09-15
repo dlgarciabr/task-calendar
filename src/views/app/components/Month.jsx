@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 const compareReminderMoment = (m1, m2) =>
   m1.date() === m2.date() && m1.month() === m2.month();
 
-const Month = ({ monthIndex, year }) => {
+const Month = () => {
   const { reminders } = useSelector((state) => state.app);
   const [openReminderDialog, setOpenReminderDialog] = useState(false);
   const [editingReminder, setEditingReminder] = useState(null);
@@ -37,8 +37,8 @@ const Month = ({ monthIndex, year }) => {
 
   const weekArray = moment.weekdays();
 
-  const mMonth = moment([year, monthIndex]);
-  const mYear = moment([year, 11, 31]);
+  const mMonth = moment();
+  const mYear = moment([moment().year(), 11, 31]);
   const monthName = mMonth.format("MMMM");
 
   const firstWeekOfMonth = moment(mMonth)
@@ -84,40 +84,32 @@ const Month = ({ monthIndex, year }) => {
     dispatch(showSuccessMessage());
   };
 
-  for (var i = 1; i <= mYear.dayOfYear(); i++) {
-    const mDay = moment().dayOfYear(i).year(year);
+  const createDayComponent = (momentDay, isCurrentMonth) => {
+    const dayReminders = reminders.filter((r) =>
+      compareReminderMoment(r.datetime, momentDay)
+    );
+    return (
+      <Day
+        currentMoment={momentDay}
+        reminders={dayReminders}
+        handleCreateReminder={() => handleCreateReminder(momentDay)}
+        handleEditReminder={handleEditReminder}
+        key={i}
+        currentMonth={isCurrentMonth}
+      />
+    );
+  };
 
-    if (
+  for (var i = 1; i <= mYear.dayOfYear(); i++) {
+    const mDay = moment().dayOfYear(i).year(mMonth.year());
+    const isCurrentMonth = mMonth.month() === mDay.month();
+    const isComplementaryDays =
       (mDay.week() === firstWeekOfMonth || mDay.week() === lastWeekOfMonth) &&
-      mMonth.month() !== mDay.month()
-    ) {
-      const dayReminders = reminders.filter((r) =>
-        compareReminderMoment(r.datetime, mDay)
-      );
-      dayComponents.push(
-        <Day
-          currentMoment={mDay}
-          reminders={dayReminders}
-          handleCreateReminder={() => handleCreateReminder(mDay)}
-          handleEditReminder={handleEditReminder}
-          key={i}
-          currentMonth={false}
-        />
-      );
-    } else if (mMonth.month() === mDay.month()) {
-      const dayReminders = reminders.filter((r) =>
-        compareReminderMoment(r.datetime, mDay)
-      );
-      dayComponents.push(
-        <Day
-          currentMoment={mDay}
-          reminders={dayReminders}
-          handleCreateReminder={() => handleCreateReminder(mDay.clone())}
-          handleEditReminder={handleEditReminder}
-          key={i}
-          currentMonth={true}
-        />
-      );
+      mMonth.month() !== mDay.month();
+    if (isComplementaryDays) {
+      dayComponents.push(createDayComponent(mDay, false));
+    } else if (isCurrentMonth) {
+      dayComponents.push(createDayComponent(mDay, true));
     }
   }
 
