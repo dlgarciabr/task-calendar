@@ -1,3 +1,8 @@
+A small front-end React/Redux calendar, containing task and weather forecast features. 
+
+Actually, only the current month can be used.
+
+
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
 ## Dependencies
